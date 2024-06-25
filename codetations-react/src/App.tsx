@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { DocumentContext, DocumentProvider } from './DocumentContext';
 import { DiskStateContext, DiskStateProvider } from './DiskStateContext';
 import { hover } from '@testing-library/user-event/dist/hover';
+import { stat } from 'fs';
 
 function App3(props: { documentContent: string, annotations: Annotation[] }) {
   // just render the document content with the annotations highlighted
@@ -390,16 +391,26 @@ const SomeComponent: React.FC = () => {
 };
 
 function App() {
+  const [documentURI, setDocumentURI] = useState('codetations-react/example/sample.txt');
+  const [stateURI, setStateURI] = useState('codetations-react/example/.sample.txt.ann.json');
+
   return (
-    <DiskStateProvider serverUrl='ws://localhost:3002' stateURI='codetations-react/example/.sample.txt.ann.json'>
-      <DocumentProvider serverUrl='ws://localhost:3002' documentURI='codetations-react/example/sample.txt'>
-        <Main />
+    <DiskStateProvider serverUrl='ws://localhost:3002' stateURI={stateURI}>
+      <DocumentProvider serverUrl='ws://localhost:3002' documentURI={documentURI}>
+        <Main setDocumentURI={setDocumentURI} documentURI={documentURI} stateURI={stateURI} setStateURI={stateURI}/>
       </DocumentProvider>
     </DiskStateProvider>
   );
 }
 
-function Main() {
+type MainProps = {
+  documentURI: string,
+  stateURI: string,
+  setStateURI: (newURI: string) => void,
+  setDocumentURI: (newURI: string) => void
+}
+
+function Main({ documentURI, setDocumentURI, stateURI, setStateURI }) {
   const { documentContent, setDocumentContent } = useDocument();
   const { diskState, setDiskState } = useDiskState();
   const [continuousRetag, setContinuousRetag] = useState(false);
@@ -422,9 +433,6 @@ function Main() {
     }
     setDiskState({ annotations: annotations?.map((value, i) => i === index ? {...annotations[i], ...annotationUpdate} : value) });
   }
-
-  const [documentURI, setDocumentURI] = useState('/home/elm/codetations/codetations-react/example/sample.txt');
-  const [stateURI, setStateURI] = useState('/home/elm/codetations/codetations-react/example/.sample.txt.ann');
 
   useEffect(() => {
     // check if the document is out of date
