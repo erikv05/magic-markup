@@ -391,8 +391,8 @@ const SomeComponent: React.FC = () => {
 };
 
 function App() {
-  const [documentURI, setDocumentURI] = useState('codetations-react/example/sample.txt');
-  const [stateURI, setStateURI] = useState('codetations-react/example/.sample.txt.ann.json');
+  const [documentURI, setDocumentURI] = useState('codetations-react/dexample/sample.txt');
+  const [stateURI, setStateURI] = useState('codetations-react/dexample/.sample.txt.ann.json');
 
   return (
     <DiskStateProvider serverUrl='ws://localhost:3002' stateURI={stateURI}>
@@ -410,7 +410,7 @@ type MainProps = {
   setDocumentURI: (newURI: string) => void
 }
 
-function Main(props: MainProps) {
+function Main({ setDocumentURI, documentURI, stateURI, setStateURI }: MainProps) {
   const { documentContent, setDocumentContent } = useDocument();
   const { diskState, setDiskState } = useDiskState();
   const [continuousRetag, setContinuousRetag] = useState(false);
@@ -485,7 +485,12 @@ function Main(props: MainProps) {
 
   if (annotations === undefined) {
     console.error("Error: annotations couldn't be read", diskState);
-    return <div>Error: annotations couldn't be read</div>;
+    return <div><div>Error: annotations couldn't be read</div><div>Document URI: &nbsp;
+    <input type="text" value={documentURI} onChange={e => setDocumentURI(e.target.value)} />
+  </div>
+  <div>State URI: &nbsp;
+    <input type="text" value={stateURI} onChange={e => setStateURI(e.target.value)} />
+  </div></div>;
   }
 
   const setAnnotations = (anns: Annotation[]) => {
@@ -493,8 +498,8 @@ function Main(props: MainProps) {
   }
   
   return (
-    <DiskStateProvider stateURI='example/.sample.txt.ann.json' serverUrl='ws://localhost:3002'>
-      <DocumentProvider serverUrl="ws://localhost:3002" documentURI='example/sample.txt'>
+    <DiskStateProvider stateURI={stateURI} serverUrl='ws://localhost:3002'>
+      <DocumentProvider serverUrl="ws://localhost:3002" documentURI={documentURI}>
         <Split className="split">
           <HTMLEditor documentContent={documentContent} annotations={annotations} setAnnotations={ setAnnotations }  hoveredAnnotation={hoveredAnnotation} selectedAnnotation={selectedAnnotation} setHoveredAnnotation={setHoveredAnnotation} setSelectedAnnotation={setSelectedAnnotation}></HTMLEditor>
           <div className="App">
