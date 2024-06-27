@@ -397,7 +397,7 @@ function App() {
   return (
     <DiskStateProvider serverUrl='ws://localhost:3002' stateURI={stateURI}>
       <DocumentProvider serverUrl='ws://localhost:3002' documentURI={documentURI}>
-        <Main setDocumentURI={setDocumentURI} documentURI={documentURI} stateURI={stateURI} setStateURI={stateURI}/>
+        <Main setDocumentURI={setDocumentURI} documentURI={documentURI} stateURI={stateURI} setStateURI={setStateURI}/>
       </DocumentProvider>
     </DiskStateProvider>
   );
@@ -410,7 +410,7 @@ type MainProps = {
   setDocumentURI: (newURI: string) => void
 }
 
-function Main({ documentURI, setDocumentURI, stateURI, setStateURI }) {
+function Main(props: MainProps) {
   const { documentContent, setDocumentContent } = useDocument();
   const { diskState, setDiskState } = useDiskState();
   const [continuousRetag, setContinuousRetag] = useState(false);
