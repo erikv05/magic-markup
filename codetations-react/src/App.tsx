@@ -391,8 +391,21 @@ const SomeComponent: React.FC = () => {
 };
 
 function App() {
-  const [documentURI, setDocumentURI] = useState('codetations-react/dexample/sample.txt');
-  const [stateURI, setStateURI] = useState('codetations-react/dexample/.sample.txt.ann.json');
+  const [documentURI, setDocumentURI] = useState('');
+  const [stateURI, setStateURI] = useState('');
+  const [haveURIs, setHaveURIs] = useState(false);
+
+  if (!haveURIs) {
+    return (
+      <div><div>Please enter document and state URIs:</div><div>Document URI: &nbsp;
+    <input type="text" value={documentURI} onChange={e => setDocumentURI(e.target.value)} />
+  </div>
+  <div>State URI: &nbsp;
+    <input type="text" value={stateURI} onChange={e => setStateURI(e.target.value)} />
+  </div>
+  <div><input type="button" value="Submit" onClick={e => {setHaveURIs(true); console.log(stateURI);}}></input></div></div>
+    )
+  }
 
   return (
     <DiskStateProvider serverUrl='ws://localhost:3002' stateURI={stateURI}>
@@ -485,17 +498,16 @@ function Main({ setDocumentURI, documentURI, stateURI, setStateURI }: MainProps)
 
   if (annotations === undefined) {
     console.error("Error: annotations couldn't be read", diskState);
-    return <div><div>Error: annotations couldn't be read</div><div>Document URI: &nbsp;
-    <input type="text" value={documentURI} onChange={e => setDocumentURI(e.target.value)} />
-  </div>
-  <div>State URI: &nbsp;
-    <input type="text" value={stateURI} onChange={e => setStateURI(e.target.value)} />
-  </div></div>;
+    return <div>Error: annotations couldn't be read</div>;
   }
 
   const setAnnotations = (anns: Annotation[]) => {
     setDiskState({ annotations: anns });
   }
+
+  //TODO: remove when done debugging
+  // console.log(documentURI);
+  // console.log(stateURI);
   
   return (
     <DiskStateProvider stateURI={stateURI} serverUrl='ws://localhost:3002'>
