@@ -403,7 +403,7 @@ function App() {
   <div>State URI: &nbsp;
     <input type="text" value={stateURI} onChange={e => setStateURI(e.target.value)} />
   </div>
-  <div><input type="button" value="Submit" onClick={e => {setHaveURIs(true); console.log(stateURI);}}></input></div></div>
+  <div><input type="button" value="Submit" onClick={e => setHaveURIs(true)}></input></div></div>
     )
   }
 
